@@ -1,0 +1,35 @@
+h1 {
+    font-size: 40px;
+    font-family: Arial;
+}
+h3 {
+    font-family: Arial;
+}
+h5 {
+    font-family: Arial;
+}
+p{
+    font-family: Arial;
+}
+.header {
+background-color: darkcyan;
+text-align: left;
+}
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid rgb(5, 59, 46);
+    font-family: Arial;
+}
+tr:nth-child(odd) {background-color: gainsboro;}
+
+input{
+    padding: 10px;
+    font-size: 1em;
+    margin-bottom: 10px;
+}
+button{
+    padding: 10px;
+    font-size: 1em;
+    background-color: darkcyan;
+}

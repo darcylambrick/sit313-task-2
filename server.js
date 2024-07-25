@@ -1,6 +1,15 @@
 const express = require("express")
 const bodyParser = require("body-parser")
 const https = require("https")
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'darcylambrick@gmail.com',
+    pass: 'lauyjvspixrpvutd'
+  }
+});
 
 const app = express()
 
@@ -15,34 +24,28 @@ app.post('/', (req,res)=>{
     const firstname = req.body.first_name
     const lastname = req.body.last_name
     const email = req.body.email
-    const data = {
-        members:[{
-            email_address: email,
-            status:"subscribed",
-            merge_fields:{
-                FNAME: firstname,
-                LNAME: lastname
-            }
-        }]
-    }
-    jsonData = JSON.stringify(data)
+    
+    var mailOptions = {
+      from: 'darcylambrick@gmail.com',
+      to: email,
+      subject: 'Thank you for signing up',
+      attachments: [{
+        filename: 'logo.png',
+        path: './public/images/logo.png',
+        cid: 'logo'
+      }],
+      html:'<div class="header" style="background-color: darkcyan;text-align: left"><img src="cid:logo" alt="Deakin logo" width="200" height="200"></div><h1 style="font-size: 40px;font-family: Arial">Welcome to the Newsletter!</h1><p style="font-family: Arial">Thanks for signing up ' + firstname +' '+ lastname + '</p>'
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
 
-    const url = "https://us13.api.mailchimp.com/3.0/lists/ed75e229e0"
-    const options = {
-        method:"POST",
-        auth:"darcy:f6fdfc65501826c66fcf3095f9be8fab-us13"
-    }
-
-
-    const request = https.request(url, options, (response)=>{
-        response.on("data", (data)=>{
-            console.log(JSON.parse(data))
-        })
-    })
-
-    request.write(jsonData)
-    request.end()
-console.log(firstname,lastname,email)
+    res.sendFile(__dirname + "/index.html")
 }) 
 
 app.listen(5000, (req,res)=>{
